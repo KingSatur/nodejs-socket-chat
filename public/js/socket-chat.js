@@ -1,7 +1,5 @@
 let socket = io();
 
-let params = new URLSearchParams(window.location.search);
-
 if (!params.has("nombre") || !params.has("sala")) {
   window.location = "index.html";
   throw new Error("The has not been provided");
@@ -13,18 +11,21 @@ let user = {
 };
 
 socket.on("connect", function () {
-  console.log("Conectado al servidor");
+  //   console.log("Conectado al servidor");
   socket.emit("enterChat", user, (resp) => {
+    // console.log(resp);
     console.log(resp);
+    renderUsers(resp);
   });
 });
 
 socket.on("createMessage", (msg) => {
-  console.log(msg);
+  renderMessages(msg, false);
+  scrollBottom();
 });
 
 socket.on("personsList", (list) => {
-  console.log(list);
+  renderUsers(list);
 });
 
 // escuchar
